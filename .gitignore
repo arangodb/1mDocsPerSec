@@ -1,0 +1,7 @@
+Waiter-docker/waiter/arangoTestPrepareCluster
+Waiter-docker/waiter/arangoTestReadWriteCluster
+Waiter-docker/waiter/run.sh
+Waiter-docker/waiter/waiter
+arangoTestPrepareCluster
+arangoTestReadWriteCluster
+waiter

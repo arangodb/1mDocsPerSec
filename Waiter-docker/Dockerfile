@@ -13,9 +13,6 @@ ADD ./HELP.md /HELP.md
 # install ubuntu package
 RUN ./scripts/install.sh
 
-# compile Mongo driver and test programs
-RUN ./scripts/install2.sh
-
 # start script
 ENTRYPOINT ["/scripts/runwaiter.sh"]
 CMD ["help"]

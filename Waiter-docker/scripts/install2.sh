@@ -1,3 +1,3 @@
 #!/bin/bash
 set -e
-cp ../waiter waiter
+cp ../waiter ../arangoTestPrepareCluster ../arangoTestReadWriteCluster ../run.sh waiter

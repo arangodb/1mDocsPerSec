@@ -1,7 +1,13 @@
 ArangoDB cluster throughput test
 ================================
 
-To build the docker image, do the following:
+First compile the waiter in `..` by doing
+
+    make throughputTest
+    
+there.
+
+Then build the docker image with:
 
     docker build -t neunhoef/waiter .
     docker push neunhoef/waiter

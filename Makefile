@@ -13,6 +13,8 @@ mongoTests:	mongoTestCount mongoTestFindOne mongoTestWriteOne
 arangoTests:	arangoTestVersion arangoTestDocument arangoTestWriteOne \
     		arangoTestPrepareCluster arangoTestReadWriteCluster
 
+throughputTest: waiter arangoTestPrepareCluster arangoTestReadWriteCluster
+
 installMongoDBCXXdriver:
 	./installMongoDBCXXdriver.sh
 

@@ -31,6 +31,9 @@ to build the code. Furthermore, there is a subdirectory `Waiter-docker`
 which contains the infrastructure to build the `neunhoef/waiter` Docker 
 image. See instructions for building there.
 
+For more details about how to run the cluster test, see the file
+`ArangoDBScaleTest.pdf` in this directory.
+
 If there are any questions, please ask
 
   "Max Neunhöffer" <max@arangodb.com>

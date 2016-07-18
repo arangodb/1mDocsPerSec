@@ -20,58 +20,28 @@ dcos package install --options=config.json arangodb
 
 with the following file config.json:
 
-    { "arangodb": {
+```json
+{
+    "arangodb": {
         "async-replication": true,
         "nr-dbservers": 8,
         "nr-coordinators": 8,
+        "nr-agents": 1,
         "framework-cpus": 0.5,
         "role": "arangodb",
         "principal": "pri",
-        "minimal-resources-agent": "mem(\*):512;cpus(\*):0.5;disk(\*):512",
-        "minimal-resources-dbserver": "mem(\*):8192;cpus(\*):3;disk(\*):8192",
-        "minimal-resources-secondary": "mem(\*):8192;cpus(\*):1;disk(\*):8192",
-        "minimal-resources-coordinator": "mem(\*):8192;cpus(\*):3;disk(\*):8192",
-        "secondaries-with-dbservers":true,
-        "docker-image": "arangodb/arangodb-mesos:devel"
-      }
+        "minimal-resources-agent": "mem(*):1024;cpus(*):0.5;disk(*):1024",
+        "minimal-resources-dbserver": "mem(*):8192;cpus(*):3;disk(*):8192",
+        "minimal-resources-secondary": "mem(*):8192;cpus(*):1;disk(*):8192",
+        "minimal-resources-coordinator": "mem(*):8192;cpus(*):3;disk(*):8192",
+        "secondaries-with-dbservers": true
     }
+}
+```
 
-5. Find out the endpoints (internal IP addresses) of the coordinator
-tasks:
+5. Deploy load servers
 
-    dcos arangodb endpoints
-
-which gives something like
-
-    URL of ArangoDB web frontend:
-    http://52.24.224.199/service/arangodb/
-    Coordinators running on:
-    http://10.0.2.24:1027
-    http://10.0.2.25:1027
-    http://10.0.3.125:1027
-    http://10.0.3.127:1027
-    http://10.0.2.23:1028
-    http://10.0.2.26:1027
-    http://10.0.3.126:1027
-    http://10.0.2.27:1027
-
-Edit the list of coordinators in doit.js, the corresponding section must
-look like:
-
-    var coordinators = [
-      "http://10.0.2.24:1027",
-      "http://10.0.2.25:1027",
-      "http://10.0.3.125:1027",
-      "http://10.0.3.127:1027",
-      "http://10.0.2.23:1028",
-      "http://10.0.2.26:1027",
-      "http://10.0.3.126:1027",
-      "http://10.0.2.27:1027"
-    ];
-
-6. Deploy load servers
-
-    curl -X POST <master-url>/service/marathon/v2/apps -d @load.json -H "Content-type: application/json"
+    dcos marathon app add load.json
 
 with file load.json:
 
@@ -99,13 +69,13 @@ with file load.json:
 
 This will deploy 4 load servers to the public slaves.
 
-7. I use a single ArangoDB instance somewhere, whose endpoint is
-hard-wired into the `doit.js` script in this repository.
+6. Then you need to create a separate single server instance of arangodb somewhere. This will control the test for us
 
-We adjust the number of clients (= number of coordinators), the number
-of shards (number of ArangoDB nodes).
+The easiest is probably to startup arangodb via docker like this
 
-8. Attach an arangosh to the single ArangoDB server via
+    docker run -d -p 8529:8529 -e ARANGO_NO_AUTH=1 --name arangodb arangodb/arangodb
+
+7. Attach an arangosh to the single ArangoDB server from your local computer
 
     arangosh --server.endpoint tcp://104.155.62.222:8529
 
@@ -122,7 +92,7 @@ connections and each load server will thus open 160=20\*8 outgoing
 connections. The optimal number is 80-100 incoming connections per
 coordinator, since we run 60 worker threads.
 
-9. Evaluate the results with this script called `eval.js` in the repository:
+8. Evaluate the results with this script called `eval.js` in the repository:
 
     arangosh --server.endpoint tcp://104.155.62.222:8529
 

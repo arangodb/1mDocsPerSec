@@ -1,0 +1,16 @@
+{
+    "arangodb": {
+        "async-replication": true,
+        "nr-dbservers": 8,
+        "nr-coordinators": 8,
+        "nr-agents": 1,
+        "framework-cpus": 0.5,
+        "role": "arangodb",
+        "principal": "pri",
+        "minimal-resources-agent": "mem(*):1024;cpus(*):0.5;disk(*):1024",
+        "minimal-resources-dbserver": "mem(*):8192;cpus(*):3;disk(*):8192",
+        "minimal-resources-secondary": "mem(*):8192;cpus(*):1;disk(*):8192",
+        "minimal-resources-coordinator": "mem(*):8192;cpus(*):3;disk(*):8192",
+        "secondaries-with-dbservers": true
+    }
+}
